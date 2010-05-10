@@ -1,0 +1,17 @@
+#!/bin/bash
+
+short_head ()
+{
+    rev=`git rev-list HEAD...HEAD^1`
+    echo ${rev:0:8}
+} 
+
+cd tic6x-binutils
+git pull
+dname=binutils-2.20-git`short_head`
+rm -f ${dname}.tar{,.bz2}
+echo "Making ${dname}.tar"
+git archive --format=tar -o ../${dname}.tar --prefix=${dname}/ HEAD ./
+cd ..
+echo "Compressing."
+bzip2 ${dname}.tar
