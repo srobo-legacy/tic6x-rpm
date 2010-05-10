@@ -13,18 +13,31 @@ pull_and_tar ()
 
     echo Working on ${git_dir}
 
-    cd $git_dir
-    git pull
+    GIT_DIR=$git_dir git fetch origin
     dname=${tar_prefix}-git`short_head`
 
-    rm -f ../${dname}.tar{,.bz2}
+    rm -f ${dname}.tar{,.bz2}
     echo -e "\tMaking ${dname}.tar"
-    git archive --format=tar -o ../${dname}.tar --prefix=${dname}/ HEAD ./
-    cd ..
+    GIT_DIR=$git_dir git archive --format=tar -o ${dname}.tar --prefix=${dname}/ HEAD ./
 
     echo -e "\tbzipping archive"
     bzip2 ${dname}.tar
 }
 
-pull_and_tar tic6x-binutils binutils-2.20-tic64x
-pull_and_tar llvm-tic6x llvm-2.6-tic64x
+clone_update ()
+{
+    dirname=$1
+    url=$2
+
+    if [ ! -d $dirname ]
+	then
+	echo Cloning $dirname
+	GIT_DIR=$dirname git clone --mirror $url
+    fi
+}
+
+clone_update tic6x-binutils.git srobo.org:/srv/git/tic6x-binutils.git
+clone_update llvm-tic6x.git srobo.org:/srv/git/llvm-tic6x.git
+
+pull_and_tar tic6x-binutils.git binutils-2.20-tic64x
+pull_and_tar llvm-tic6x.git llvm-2.6-tic64x
