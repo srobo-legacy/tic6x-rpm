@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TOPDIR=`rpm --eval '%{_topdir}'`
+BASEDIR=`pwd`
+
+make clean-specs
+make
+
+
+( cd ${TOPDIR}/SOURCES ;
+    ln -fs `ls ${BASEDIR}/git/binutils-2.20-tic64x-*.tar.bz2 | head -n 1` ; )
+rpmbuild -ba tic64x-binutils.spec
+
