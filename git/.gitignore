@@ -1,2 +1,4 @@
 *.tar.bz2
 tic6x-binutils
+llvm-tic6x
+newlib-tic6x
