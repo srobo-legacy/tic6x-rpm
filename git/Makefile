@@ -1,4 +1,7 @@
 
+all:
+	./update
+
 .PHONY: clean
 
 clean:
