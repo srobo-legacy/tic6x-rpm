@@ -1,5 +1,7 @@
 DATE := `date +%Y%m%d`
 
+all: tic64x-binutils.spec llvm.spec
+
 tic64x-binutils.spec: tic64x-binutils.spec.in
 	( cd git ; \
 	tmp=`ls binutils*tar.bz2 | head -n 1 | egrep -o -- '-git[^.]+'` ; \
