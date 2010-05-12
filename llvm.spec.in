@@ -59,6 +59,17 @@ rm -rf %{buildroot}%{our_prefix}/include
 # as are the docs:
 rm -rf %{buildroot}%{our_prefix}/docs
 
+# Add symlinks to the binaries:
+mkdir -p %{buildroot}%{_bindir}
+for x in %{buildroot}%{our_prefix}/bin/*
+    do
+    pushd %{buildroot}%{_bindir}
+
+    fname=`echo $x | sed -e 's=%{buildroot}=='`
+    ln -s $fname %{target}-`basename $x`
+    popd
+done
+
 %clean
 rm -rf %{buildroot}
 
@@ -67,6 +78,7 @@ rm -rf %{buildroot}
 %doc CREDITS.TXT LICENSE.TXT README.txt
 
 %{our_prefix}/bin/*
+%{_bindir}/%{target}-*
 %{our_prefix}/lib/*
 
 %changelog
