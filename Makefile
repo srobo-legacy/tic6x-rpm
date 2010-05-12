@@ -8,6 +8,14 @@ tic64x-binutils.spec: tic64x-binutils.spec.in
 	sed -e "s/GIT_HASH/$${hash}/" $< > $@ ; )
 	sed -e "s/GIT_DATE/${DATE}/" -i $@
 
+llvm.spec: llvm.spec.in
+	( cd git ; \
+	tmp=`ls llvm*tar.bz2 | head -n 1 | egrep -o -- '-git[^.]+'` ; \
+	cd .. ; \
+	hash=`echo $${tmp:4}` ; \
+	sed -e "s/GIT_HASH/$${hash}/" $< > $@ ; )
+	sed -e "s/GIT_DATE/${DATE}/" -i $@
+
 .PHONY: clean-specs
 
 clean-specs:

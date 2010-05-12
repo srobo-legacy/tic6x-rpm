@@ -1,0 +1,74 @@
+%define target tic64x
+%define llvm_target tms320c64x
+%define git_date GIT_DATE
+%define git_version GIT_HASH
+%define upversion 2.6
+%define dir_name llvm-%{upversion}-tic64x-git%{git_version}
+
+%define our_prefix %{_prefix}/%{target}
+%define our_libdir %{_libdir}/%{target}
+
+Name:		%{target}-llvm
+Version:	%{upversion}
+Release:	1.%{git_date}git%{git_version}%{?dist}
+Summary:	The Low Level Virtual Machine (An Optimizing Compiler Infrastructure) targeted at %{target}
+License: 	University of Illinois/NCSA Open Source License
+Group: 		Development/Compilers
+URL:		http://llvm.org/
+Source0:	llvm-%{upversion}-tic64x-git%{git_version}.tar.bz2
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%description
+TODO: Describe llvm here!
+
+%prep
+%setup -q -n %{dir_name}
+
+%build
+mkdir -p build
+cd build
+../configure \
+	--prefix=%{our_prefix} \
+	--datadir=%{_datadir} \
+	--includedir=%{_includedir} \
+	--libdir=%{our_libdir} \
+	--mandir=%{_mandir} \
+	--infodir=%{_infodir} \
+	--enable-optimized \
+	--enable-assertions \
+	--enable-targets=tms320c64x \
+	--program-prefix=%{target}-
+
+make %{?_smp_mflags} tools-only
+
+%install
+rm -rf $RPM_BUILD_ROOT
+cd build
+make install DESTDIR=$RPM_BUILD_ROOT
+
+# Nabbed from the Fedora llvm spec
+# Munch those rpaths
+#find %{buildroot} -name .dir -print0 | xargs -0r rm -f
+file %{buildroot}%{our_prefix}/bin/* | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
+find %{buildroot} -name '*.so' | xargs file | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
+
+# man pages are provided by Fedora's real llvm package:
+rm -rf %{buildroot}%{our_prefix}/share/man
+# as are these -- however, these may one day be in the -devel package:
+rm -rf %{buildroot}%{our_prefix}/include
+# as are the docs:
+rm -rf %{buildroot}%{our_prefix}/docs
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-, root, root)
+%doc CREDITS.TXT LICENSE.TXT README.txt
+
+%{our_prefix}/bin/*
+%{our_prefix}/lib/*
+
+%changelog
+* Tue May 11 2010 Robert Spanton 2.6
+- Initial release
