@@ -15,7 +15,7 @@ Version:	%{upversion}
 Release:	1.%{git_date}git%{git_version}%{?dist}
 Summary:	The Low Level Virtual Machine (An Optimizing Compiler Infrastructure) targeted at %{target}
 License: 	NCSA
-Group: 		Development/Compilers
+Group: 		Development/Languages
 URL:		http://llvm.org/
 Source0:	llvm-%{upversion}-tic64x-git%{git_version}.tar.bz2
 Source1:	clang-%{upversion}-tic64x-git%{clang_git_version}.tar.bz2
@@ -28,6 +28,15 @@ link-time, runtime, and idle-time optimization of programs from
 arbitrary programming languages.  The compiler infrastructure includes
 mirror sets of programming tools as well as libraries with equivalent
 functionality.  This version targets tic64x.
+
+%package devel
+Summary:        Libraries and header files for LLVM
+Group:          Development/Languages
+Requires:	%{name} = %{version}-%{release}
+
+%description devel
+This package contains library and header files needed to develop new
+native programs that use the LLVM infrastructure.
 
 %package -n %{target}-clang
 Summary:        A C language family front-end for LLVM
@@ -83,7 +92,6 @@ find %{buildroot} -name '*.so' | xargs file | awk -F: '$2~/ELF/{print $1}' | xar
 rm -rf %{buildroot}%{our_prefix}/share/man
 # as are these -- however, these may one day be in the -devel package:
 rm -rf %{buildroot}%{our_prefix}/include
-rm -rf %{buildroot}%{our_prefix}/lib/clang
 # as are the docs:
 rm -rf %{buildroot}%{our_prefix}/docs
 
@@ -107,9 +115,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root)
 
-%{our_prefix}/bin/tblgen
-%{_bindir}/%{target}-tblgen
-
 %{our_prefix}/bin/llvm*
 %{_bindir}/%{target}-llvm*
 %{our_prefix}/bin/llc
@@ -118,17 +123,26 @@ rm -rf %{buildroot}
 %{_bindir}/%{target}-lli
 %{our_prefix}/bin/opt
 %{_bindir}/%{target}-opt
+%{our_prefix}/lib/*.so
+
+
+%files devel
+%defattr(-, root, root)
+%{our_prefix}/lib/*.a
+%{our_prefix}/bin/llvm-config
+%{_bindir}/%{target}-llvm-config
+%{our_prefix}/bin/tblgen
+%{_bindir}/%{target}-tblgen
 %{our_prefix}/bin/bugpoint
 %{_bindir}/%{target}-bugpoint
 
-%{our_prefix}/lib/*
 
 %files -n %{target}-clang
 %defattr(-, root, root)
 
 %{our_prefix}/bin/clang*
 %{_bindir}/%{target}-clang*
-
+%{our_prefix}/lib/clang
 
 
 %changelog
