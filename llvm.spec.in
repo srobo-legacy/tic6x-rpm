@@ -2,6 +2,8 @@
 %define llvm_target tms320c64x
 %define git_date GIT_DATE
 %define git_version GIT_HASH
+%define clang_git_date CLANG_GIT_DATE
+%define clang_git_version CLANG_GIT_HASH
 %define upversion 2.7
 %define dir_name llvm-%{upversion}-tic64x-git%{git_version}
 
@@ -12,18 +14,40 @@ Name:		%{target}-llvm
 Version:	%{upversion}
 Release:	1.%{git_date}git%{git_version}%{?dist}
 Summary:	The Low Level Virtual Machine (An Optimizing Compiler Infrastructure) targeted at %{target}
-License: 	University of Illinois/NCSA Open Source License
+License: 	NCSA
 Group: 		Development/Compilers
 URL:		http://llvm.org/
 Source0:	llvm-%{upversion}-tic64x-git%{git_version}.tar.bz2
+Source1:	clang-%{upversion}-tic64x-git%{clang_git_version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  ocaml-ocamldoc
 
 %description
-TODO: Describe llvm here!
+LLVM is a compiler infrastructure designed for compile-time,
+link-time, runtime, and idle-time optimization of programs from
+arbitrary programming languages.  The compiler infrastructure includes
+mirror sets of programming tools as well as libraries with equivalent
+functionality.  This version targets tic64x.
+
+%package -n %{target}-clang
+Summary:        A C language family front-end for LLVM
+License:        NCSA
+Group:          Development/Languages
+
+%description -n %{target}-clang
+clang: noun
+    1. A loud, resonant, metallic sound.
+    2. The strident call of a crane or goose.
+    3. C-language family front-end toolkit.
+
+The goal of the Clang project is to create a new C, C++, Objective C
+and Objective C++ front-end for the LLVM compiler. Its tools are built
+as libraries and designed to be loosely-coupled and extensible.
 
 %prep
 %setup -q -c -n llvm-2.7 -a 0 -T
+%setup -q -n llvm-2.7 -a 1 -T -D
+mv clang-%{upversion}-tic64x-git%{clang_git_version} %{dir_name}/tools/clang
 
 %build
 pushd %{dir_name}
@@ -59,6 +83,7 @@ find %{buildroot} -name '*.so' | xargs file | awk -F: '$2~/ELF/{print $1}' | xar
 rm -rf %{buildroot}%{our_prefix}/share/man
 # as are these -- however, these may one day be in the -devel package:
 rm -rf %{buildroot}%{our_prefix}/include
+rm -rf %{buildroot}%{our_prefix}/lib/clang
 # as are the docs:
 rm -rf %{buildroot}%{our_prefix}/docs
 
@@ -73,16 +98,32 @@ for x in %{buildroot}%{our_prefix}/bin/*
     popd
 done
 
+# We don't care about ocaml (sorry :-P)
+rm -rf %{buildroot}%{our_prefix}/lib/ocaml
+
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root)
 
-%{our_prefix}/bin/*
-%{_bindir}/%{target}-*
+%{our_prefix}/bin/llvm*
+%{our_prefix}/bin/tblgen
+%{_bindir}/%{target}-llvm*
+%{_bindir}/%{target}-tblgen
 %{our_prefix}/lib/*
 
+%files -n %{target}-clang
+%defattr(-, root, root)
+
+%{our_prefix}/bin/clang*
+%{_bindir}/%{target}-clang*
+
+
+
 %changelog
+* Thu Jul 22 2010 Robert Spanton 2.7
+- Sort out clangage
+
 * Tue May 11 2010 Robert Spanton 2.6
 - Initial release
