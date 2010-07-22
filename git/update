@@ -38,6 +38,8 @@ clone_update ()
 
 clone_update tic6x-binutils.git srobo.org:/srv/git/tic6x-binutils.git
 clone_update llvm-tic6x.git srobo.org:/srv/git/llvm-tic6x.git
+clone_update clang-tic6x.git srobo.org:/srv/git/clang-tic6x.git
 
 pull_and_tar tic6x-binutils.git binutils-2.20-tic64x
-pull_and_tar llvm-tic6x.git llvm-2.6-tic64x
+pull_and_tar llvm-tic6x.git llvm-2.7-tic64x
+pull_and_tar clang-tic6x.git clang-2.7-tic64x
