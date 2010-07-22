@@ -14,7 +14,9 @@ pull_and_tar ()
     echo Working on ${git_dir}
 
     GIT_DIR=$git_dir git fetch origin
+    pushd ${git_dir}
     dname=${tar_prefix}-git`short_head`
+    popd
 
     rm -f ${dname}.tar{,.bz2}
     echo -e "\tMaking ${dname}.tar"
