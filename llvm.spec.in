@@ -17,6 +17,7 @@ Group: 		Development/Compilers
 URL:		http://llvm.org/
 Source0:	llvm-%{upversion}-tic64x-git%{git_version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  ocaml-ocamldoc
 
 %description
 TODO: Describe llvm here!
