@@ -107,10 +107,20 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root)
 
-%{our_prefix}/bin/llvm*
 %{our_prefix}/bin/tblgen
-%{_bindir}/%{target}-llvm*
 %{_bindir}/%{target}-tblgen
+
+%{our_prefix}/bin/llvm*
+%{_bindir}/%{target}-llvm*
+%{our_prefix}/bin/llc
+%{_bindir}/%{target}-llc
+%{our_prefix}/bin/lli
+%{_bindir}/%{target}-lli
+%{our_prefix}/bin/opt
+%{_bindir}/%{target}-opt
+%{our_prefix}/bin/bugpoint
+%{_bindir}/%{target}-bugpoint
+
 %{our_prefix}/lib/*
 
 %files -n %{target}-clang
