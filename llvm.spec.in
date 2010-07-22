@@ -45,6 +45,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd %{dir_name}
 cd build
 make install DESTDIR=$RPM_BUILD_ROOT
 
