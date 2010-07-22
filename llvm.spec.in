@@ -2,7 +2,7 @@
 %define llvm_target tms320c64x
 %define git_date GIT_DATE
 %define git_version GIT_HASH
-%define upversion 2.6
+%define upversion 2.7
 %define dir_name llvm-%{upversion}-tic64x-git%{git_version}
 
 %define our_prefix %{_prefix}/%{target}
@@ -22,9 +22,10 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 TODO: Describe llvm here!
 
 %prep
-%setup -q -n %{dir_name}
+%setup -q -c -n llvm-2.7 -a 0 -T
 
 %build
+pushd %{dir_name}
 mkdir -p build
 cd build
 ../configure \
