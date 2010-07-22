@@ -41,7 +41,7 @@ cd build
 	--enable-targets=tms320c64x \
 	--program-prefix=%{target}-
 
-make %{?_smp_mflags} tools-only
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
