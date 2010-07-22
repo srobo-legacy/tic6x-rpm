@@ -12,5 +12,6 @@ make
 rpmbuild -ba tic64x-binutils.spec
 
 ( cd ${TOPDIR}/SOURCES ;
-    ln -fs `ls ${BASEDIR}/git/llvm-2.7-tic64x-*.tar.bz2 | head -n 1` ; )
+    ln -fs `ls ${BASEDIR}/git/llvm-2.7-tic64x-*.tar.bz2 | head -n 1` ;
+    ln -fs `ls ${BASEDIR}/git/clang-2.7-tic64x-*.tar.bz2 | head -n 1` ; )
 rpmbuild -ba llvm.spec
